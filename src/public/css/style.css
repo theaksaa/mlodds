@@ -1,0 +1,35 @@
+@font-face {
+    font-family: Hiragino;
+    src: url('/public/fonts/Hiragino.otf');
+}
+
+body {
+    background-color: #f7f7f7;
+}
+
+.font-ml {
+    font-family: Hiragino;
+    color: #2B3445;
+}
+
+.color-ml {
+    color: #2B3445;
+}
+
+.progress {
+    height: 40px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 3px #0000003a;
+}
+
+.percentage-text {
+    text-shadow: 1px 1px 3px #000000;
+}
+
+.logo {
+    height: 40px;
+}
+
+.button-points {
+    width: 55px !important;
+}

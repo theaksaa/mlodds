@@ -1,0 +1,83 @@
+<script type="text/javascript">
+    var pointsMap = {};
+    var previousPoints = {};
+    function update(id, points) {
+        document.getElementById(id + "_" + points).innerHTML = points + ' <i class="bi bi-check"></i>';
+        document.getElementById(id).innerHTML = points;
+        pointsMap[points] = id;
+
+        if(id in previousPoints) {
+            document.getElementById(id + "_" + previousPoints[id]).innerHTML = previousPoints[id];
+            delete(pointsMap[previousPoints[id]]);
+        }
+        previousPoints[id] = points;
+
+        var a = document.getElementsByClassName('team-points');
+        for(var x of a) {
+            var buttonId = (x.id).substring(0, (x.id).indexOf("_"));
+            var currentPoints = (x.id).substring((x.id).indexOf("_") + 1);
+
+            if(currentPoints in pointsMap) x.setAttribute("disabled", "");
+            else x.removeAttribute("disabled", "");
+        }
+    }
+
+    function checkSubmissionPoints() {
+        var checkPoints = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 25 ];
+        for(let points of checkPoints) {
+            if(!(points in pointsMap)) return false;
+        }
+        return true;
+    }
+
+    function checkSubmissionData(data) {
+        if(data.length == 16) return true;
+        return false;
+    }
+
+    function convert(points) {
+        var checkData = {}, data = [];
+        for(var x of Object.keys(points)) {
+            if(points[x] in checkData) return [];
+            else {
+                checkData[points[x]] = x;
+                data.push({ id: points[x], value: parseInt(x) });
+            }
+        }
+        return data;
+    }
+
+    async function submit() {
+        var title = "Title";
+        var message = "Message";
+        var data = convert(pointsMap);
+        if(checkSubmissionPoints() && checkSubmissionData(data)) {
+            await fetch("/api/user/submit", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            }).then(async (response) => {
+                if(response.ok) {
+                    // var data = (await response.json());
+                    title = "Success";
+                    message = "Great news! Your team votes have been saved successfully. 🤩";
+                }
+                else throw new Error('Something went wrong.');
+            }).catch((error) => {  
+                title = "Oppps";
+                message = "Something went wrong, try again... 🙄";
+            });
+        }
+        else {
+            title = "Oppps";
+            message = "You have to distribute all of your points to teams. You can't keep any for yourself! 😅";
+        }
+
+        document.getElementById("modal-title").innerHTML = title;
+        document.getElementById("modal-body").innerHTML = message;
+        $("#modal").modal("show");
+    }
+</script>

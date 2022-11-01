@@ -1,0 +1,72 @@
+<html lang="en">
+    <%- include('./components/head.ejs', { title }) %>
+    <body>
+        <div class="jumbotron d-flex align-items-center min-vh-100">
+            <div class="container">
+                <div class="container mt-2 d-flex flex-column justify-content-center">
+                    <h1 class="text-center">Marble League Odds</h1>
+                    <p class="text-center">Please Register - We've Got Some Fun for You!</p>
+                </div>
+                <div class="container mt-3 col-md-4">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" aria-describedby="usernameHelp">
+                            <div id="usernameHelp" class="form-text">Your username will be used to login and will be visible to everyone.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" aria-describedby="passwordHelp">
+                            <div id="passwordHelp" class="form-text">Your password is encrypted, which means that it is safe from prying eyes.</div>
+                        </div>
+                        <div class="d-grid gap-2 mt-5">
+                            <button id="submit" class="btn btn-primary" type="submit" onclick="submit()">Register</button>
+                        </div>
+                    </form>
+                    <hr/>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-secondary" type="submit" onclick="location.href='/login'">I have an account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('./components/modal.ejs') %>
+        <%- include('./components/scripts.ejs') %>
+        <script type="text/javascript">
+            document.getElementById("submit").onclick = async function(e) {  
+                e.preventDefault();
+
+                let data = {
+                    username: document.getElementById("username").value,
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value
+                };
+
+                await fetch("/api/user/register", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response) => {
+                    if(response.ok) location.href = '/email';
+                    else {
+                        document.getElementById("modal-title").innerHTML = "Oppps";
+                        document.getElementById("modal-body").innerHTML = (await response.json()).message;
+                        $("#modal").modal("show");
+                    }
+                }).catch((error) => {  
+                    document.getElementById("modal-title").innerHTML = "Oppps";
+                    document.getElementById("modal-body").innerHTML = "Something went wrong, try again... 🙄";
+                    $("#modal").modal("show");
+                });
+            };  
+        </script>
+    </body>
+</html>

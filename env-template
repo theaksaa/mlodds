@@ -1,0 +1,9 @@
+MongoDB_URL=
+MongoStore_URL=
+SessionSecret=
+MongoStoreSecret=
+JWTSecret=
+PORT=
+Email_SERVICE=
+Email_USER=
+Email_PASS=

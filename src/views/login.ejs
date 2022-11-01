@@ -1,0 +1,65 @@
+<html lang="en">
+    <%- include('./components/head.ejs', { title }) %>
+    <body>
+        <div class="jumbotron d-flex align-items-center min-vh-100">
+            <div class="container">
+                <div class="container mt-2 d-flex flex-column justify-content-center">
+                    <h1 class="text-center">Marble League Odds</h1>
+                    <p class="text-center">Please Login - We've Got Some Fun for You!</p>
+                </div>
+                <div class="container mt-3 col-md-4">
+                    <form>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="d-grid gap-2 mt-5">
+                            <button id="submit" class="btn btn-primary" type="submit" onclick="submit()">Login</button>
+                        </div>
+                    </form>
+                    <hr/>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-secondary" onclick="location.href='/register'">I don't have an account</button>
+                        <button class="btn btn-secondary" onclick="location.href='/'">Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('./components/modal.ejs') %>
+        <%- include('./components/scripts.ejs') %>
+        <script type="text/javascript">
+            document.getElementById("submit").onclick = async function(e) {  
+                e.preventDefault();
+
+                let data = {
+                    username: document.getElementById("username").value,
+                    password: document.getElementById("password").value
+                };
+
+                await fetch("/api/user/login", {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }).then(async (response) => {
+                    if(response.ok) location.href = '/';
+                    else {
+                        document.getElementById("modal-title").innerHTML = "Oppps";
+                        document.getElementById("modal-body").innerHTML = "Looks like you're trying to access our site with an incorrect login. Please check your credentials and try again. 🙄";
+                        $("#modal").modal("show");
+                    }
+                }).catch((error) => {  
+                    document.getElementById("modal-title").innerHTML = "Oppps";
+                    document.getElementById("modal-body").innerHTML = "Something went wrong, try again... 🙄";
+                    $("#modal").modal("show");
+                });
+            };  
+        </script>
+    </body>
+</html>

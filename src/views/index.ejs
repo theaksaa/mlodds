@@ -1,0 +1,87 @@
+<html lang="en">
+    <%- include('./components/head.ejs', { title }) %>
+    <body>
+        <div class="container mt-2 d-flex flex-column justify-content-center">
+            <h1 class="text-center">Marble League Odds</h1>
+            <p class="text-center">Who will win the league? Cast your votes!</p>
+        </div>
+        <div class="container mt-3">
+            <% var points = [ 25, 20, 15, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 ];%>
+            <% for(var i = 0; i < teams.length; i++) { %>
+                <div class="container mb-3">
+                    <div class="row">
+                        <div class="col">
+                            <h3>
+                                <%-teams[i].name%>
+                                <% if(teams[i].positionChange > 0) { %>
+                                    <i class="bi bi-caret-up-fill text-success"></i>
+                                    <%-Math.abs(teams[i].positionChange)%>
+                                <% } else if(teams[i].positionChange < 0) {%>
+                                    <i class="bi bi-caret-down-fill text-danger"></i>
+                                    <%-Math.abs(teams[i].positionChange)%>
+                                <% } else { %>
+                                    <i class="bi bi-dash text-secondary"></i>
+                                <% } %>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-auto">
+                            <h4><%-i + 1%>.</h4> 
+                        </div>
+                        <div class="col-auto">
+                            <img class="logo" src="<%-teams[i].image%>"/>
+                        </div>
+                        <div class="col">
+                            <div class="progress position-relative">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated percentage-text" role="progressbar" style="width: <%-teams[i].power%>%; font-size: x-large; background-color: <%-teams[i].color%>;" aria-valuenow="<%-teams[i].power%>" aria-valuemin="0" aria-valuemax="100">
+                                    <%-teams[i].percentage%>%
+                                </div>
+                            </div>
+                        </div>
+                        <% if(isLogged && !isVoted) { %>
+                            <div class="col-auto">
+                                <div class="dropdown">
+                                    <button id="<%-teams[i].id%>" class="btn btn-secondary dropdown-toggle button-points" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        -
+                                    </button>
+                                    <ul class="dropdown-menu" id="dropdown_<%-teams[i].id%>">
+                                        <li><h6 class="dropdown-header">Select points</h6></li>
+                                        <% for(var x of points) { %>
+                                            <li><button id="<%-teams[i].id%>_<%-x%>" onclick="update('<%-teams[i].id%>', '<%-x%>')" class="dropdown-item team-points" type="button"><%-x%></button></li>
+                                        <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+                <hr/>
+            <% } %>
+            <div class="d-grid gap-2 mt-3">
+                <h5 class="text-center">Total votes: <b><%-votes%></b></h5>
+            </div>
+            <% if(isLogged) { %>
+                <% if(!isVoted) { %>
+                    <div class="d-grid gap-2 mt-3">
+                        <button id="submit" class="btn btn-primary" type="button" onclick="submit()">Submit your vote</button>
+                    </div>
+                <% } %>
+                <div class="container mt-2 d-flex flex-column justify-content-center">
+                    <a class="text-center" href='api/user/logout'>Logout</a>
+                </div>
+            <% } else { %>
+                <div class="d-grid gap-2 mt-3">
+                    <button id="submit" class="btn btn-primary" type="button" onclick="location.href='/login'" aria-describedby="help">Do you want to vote?</button>
+                    <div id="help" class="form-text text-center">In order to vote, you will need to create an account or log in if you're already a member.</div>
+                </div>
+            <% } %>
+        </div>
+        <%- include('./components/modal.ejs') %>
+        <%- include('./components/footer.ejs') %>
+        <%- include('./components/scripts.ejs') %>
+        <% if(isLogged) { %>
+            <%-include('./components/vote_obs.ejs')%>
+        <% } %>
+    </body>
+</html>

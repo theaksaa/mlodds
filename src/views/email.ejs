@@ -1,0 +1,27 @@
+<html lang="en">
+    <%- include('./components/head.ejs', { title: 'Marble League Odds - Email Verification' }) %>
+    <body>
+        <div class="jumbotron d-flex align-items-center min-vh-100">
+            <div class="container">
+                <div class="container mt-2 d-flex flex-column justify-content-center">
+                    <h1 class="text-center">Marble League Odds</h1>
+                    <p class="text-center">Email verification</p>
+                </div>
+                <div class="container mt-3 col-md-4">
+                    <div class="d-grid gap-2">
+                        <h4 class="text-center">
+                            <% if(locals.message) { %>
+                                <%-message%>
+                            <% } else { %>
+                                Check your email to verify
+                            <% } %>
+                        </h4>
+                        <button class="btn btn-secondary" type="submit" onclick="location.href='/login'">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('./components/modal.ejs') %>
+        <%- include('./components/scripts.ejs') %>
+    </body>
+</html>
