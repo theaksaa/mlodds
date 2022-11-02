@@ -12,6 +12,14 @@
                     <div class="row">
                         <div class="col">
                             <h3>
+                                <% if(i == 0) { %>
+                                    🥇
+                                <% } else if(i == 1) { %>
+                                    🥈
+                                <% } else if(i == 2) { %>
+                                    🥉
+                                <% } %>
+
                                 <%-teams[i].name%>
                                 <% if(teams[i].positionChange > 0) { %>
                                     <i class="bi bi-caret-up-fill text-success"></i>
